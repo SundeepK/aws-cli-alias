@@ -1,0 +1,5 @@
+alias getSqsArn='function _getArn(){ aws sqs list-queues --queue-name-prefix $1 | jq -r '.QueueUrls[]' | xargs -L 1 -I {} aws sqs get-queue-attributes --queue-url {} --attribute-names QueueArn | jq -r '.Attributes.QueueArn'; };_getArn'
+alias getSnsArn="function _getSnsArn(){ aws sns list-topics | jq --arg prefix \$1 -r '.Topics[] | select(.TopicArn | contains(\$prefix))' | jq -r '.TopicArn'; };_getSnsArn"
+alias getDynamoName="function _getDynamoName(){ aws dynamodb list-tables | jq -r '.TableNames[]' | grep -i \$1; };_getDynamoName"
+alias getDynamoArn="function _getDynamoArn(){ aws dynamodb list-tables | jq -r '.TableNames[]' | grep -i \$1 | xargs -L 1 -I {} aws dynamodb describe-table --table-name {} | jq -r '.Table.TableArn';};_getDynamoArn"
+alias getCloudsearchArn="function _getCloudsearchArn(){ aws cloudsearch describe-domains | jq -r '.DomainStatusList[].ARN' | grep -i \$1; };_getCloudsearchArn"
